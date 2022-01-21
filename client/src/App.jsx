@@ -2,7 +2,7 @@ import './App.css';
 import { TodoList } from "./components/TodoList";
 import { InputField } from "./components/InputField";
 import { useEffect, useState } from "react";
-import {addNewTodo, fetchTodos} from "./store/todoSlice";
+import { addNewTodo, fetchTodos } from "./store/todoSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 export const App = () => {
@@ -17,7 +17,9 @@ export const App = () => {
     }
 
     useEffect(() => {
-        dispatch(fetchTodos())
+        if(!JSON.parse(JSON.parse(localStorage.getItem('persist:root')).todos).todos.length){
+            dispatch(fetchTodos())
+        }
     }, [dispatch])
 
   return (
