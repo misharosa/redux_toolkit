@@ -17,17 +17,15 @@ export const App = () => {
     }
 
     useEffect(() => {
-        if(!JSON.parse(JSON.parse(localStorage.getItem('persist:root')).todos).todos.length){
             dispatch(fetchTodos())
-        }
     }, [dispatch])
 
   return (
     <div className="App">
         <InputField
-        value={title}
-        updateText={setTitle}
-        handleAction={handleAction}
+            value={title}
+            updateText={setTitle}
+            handleAction={handleAction}
         />
         {status === 'loading' && <h2>Loading...</h2>}
         {error && <h2>An error occurred: "{error}"</h2>}

@@ -1,15 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
+import axios from "axios";
+
+const URL_API = "https://jsonplaceholder.typicode.com/todos"
 
 export const fetchTodos = createAsyncThunk(
     'todos/fetchTodos',
-    async function(_, {rejectWithValue}) {
+    async function( _ , {rejectWithValue}) {
         try {
-        const response = await fetch("https://jsonplaceholder.typicode.com/todos?_limit=10")
-        if (!response.ok) {
-            throw new Error('Server Error!')
-        }
+        const { data } = await axios(`${URL_API}?_limit=15`)
 
-        return response.json()
+        return data
         } catch (error) {
            return rejectWithValue(error.message);
         }
@@ -20,16 +20,9 @@ export const deleteTodo = createAsyncThunk(
     "todos/deleteTodo",
     async function(id, {rejectWithValue,dispatch}){
         try {
-            const response = await fetch(`https://jsonplaceholder.typicode.com/todos/${id}`, {
-                method: 'DELETE'
-            })
-
-            if (!response.ok) {
-                throw new Error('Can\'t delete task. Server error.')
-            }
+            await axios.delete(`${URL_API}/${id}`)
 
             dispatch(removeTodo({id}))
-
         } catch (error) {
             return rejectWithValue(error.message)
         }
@@ -38,22 +31,12 @@ export const deleteTodo = createAsyncThunk(
 
 export const toggleStatus = createAsyncThunk(
     'todos/toggleStatus',
-    async function(id,{rejectWithValue,dispatch,getState}){
+    async function( id, { rejectWithValue, dispatch, getState } ){
         const todo = getState().todos.todos.find(todo => todo.id === id)
             try {
-                const response = await fetch(`https://jsonplaceholder.typicode.com/todos/${id}`, {
-                    method:'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        completed: !todo.completed
-                    })
+                await axios.patch(`${URL_API}/${id}`, {
+                    completed: !todo.completed
                 })
-
-                if (!response.ok) {
-                    throw new Error('Can\'t toggle status. Server error.')
-                }
 
                 dispatch(toggleTodoComplete({ id }))
 
@@ -72,20 +55,9 @@ export const addNewTodo = createAsyncThunk(
                 userId: 1,
                 completed: false
             }
-            const response = await fetch('https://jsonplaceholder.typicode.com/todos', {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(todo)
-            })
+            const response = await axios.post(`${URL_API}`, todo)
+            const { data } = await response
 
-            if (!response.ok) {
-                throw new Error('Can\'t toggle status. Server error.')
-            }
-
-            const data = await response.json()
-            console.log(data)
             dispatch(addTodo(data))
         } catch (error) {
             rejectWithValue(error.message)
