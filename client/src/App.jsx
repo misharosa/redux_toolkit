@@ -18,7 +18,7 @@ export const App = () => {
 
     useEffect(() => {
 
-        if (!JSON.parse(localStorage.getItem('todos')).length) {
+        if (!JSON.parse(sessionStorage.getItem('todos')).length) {
             dispatch(fetchTodos())
         }
     }, [dispatch])

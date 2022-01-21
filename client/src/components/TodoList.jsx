@@ -4,8 +4,8 @@ import { TodoItem } from "./TodoItem";
 export const TodoList = () => {
     const todos = useSelector(state => state.todos.todos)
 
-    localStorage.setItem('todos', JSON.stringify(todos))
-    const localTodos = JSON.parse(localStorage.getItem('todos'))
+    sessionStorage.setItem('todos', JSON.stringify(todos))
+    const localTodos = JSON.parse(sessionStorage.getItem('todos'))
 
     return (
         <ul>
