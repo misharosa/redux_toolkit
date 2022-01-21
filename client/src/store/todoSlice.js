@@ -5,7 +5,7 @@ const URL_API = "https://jsonplaceholder.typicode.com/todos"
 
 export const fetchTodos = createAsyncThunk(
     'todos/fetchTodos',
-    async function( _ , {rejectWithValue}) {
+    async ( _ , {rejectWithValue}) => {
         try {
         const { data } = await axios(`${URL_API}?_limit=15`)
 
@@ -18,11 +18,11 @@ export const fetchTodos = createAsyncThunk(
 
 export const deleteTodo = createAsyncThunk(
     "todos/deleteTodo",
-    async function(id, {rejectWithValue,dispatch}){
+    async (id, {rejectWithValue,dispatch}) => {
         try {
-            await axios.delete(`${URL_API}/${id}`)
-
             dispatch(removeTodo({id}))
+
+            await axios.delete(`${URL_API}/${id}`)
         } catch (error) {
             return rejectWithValue(error.message)
         }
@@ -31,15 +31,12 @@ export const deleteTodo = createAsyncThunk(
 
 export const toggleStatus = createAsyncThunk(
     'todos/toggleStatus',
-    async function( id, { rejectWithValue, dispatch, getState } ){
+    async ( id, { rejectWithValue, dispatch, getState } ) => {
         const todo = getState().todos.todos.find(todo => todo.id === id)
             try {
-                await axios.patch(`${URL_API}/${id}`, {
-                    completed: !todo.completed
-                })
-
                 dispatch(toggleTodoComplete({ id }))
 
+                await axios.patch(`${URL_API}/${id}`, {completed: !todo.completed})
             } catch (error) {
                 return rejectWithValue((error.message))
             }
@@ -48,17 +45,16 @@ export const toggleStatus = createAsyncThunk(
 
 export const addNewTodo = createAsyncThunk(
     'todos/addNewTodo',
-    async function(title,{ rejectWithValue, dispatch }) {
+    async (title, {rejectWithValue, dispatch}) => {
         try {
             const todo = {
                 title,
                 userId: 1,
                 completed: false
             }
-            const response = await axios.post(`${URL_API}`, todo)
-            const { data } = await response
+            dispatch(addTodo(todo))
 
-            dispatch(addTodo(data))
+            await axios.post(`${URL_API}`, todo)
         } catch (error) {
             rejectWithValue(error.message)
         }
