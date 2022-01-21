@@ -69,7 +69,7 @@ const setError = (state, action) => {
 const todoSlice = createSlice({
     name: "todos",
     initialState: {
-        todos: JSON.parse(localStorage.getItem('todos')) ,
+        todos: JSON.parse(localStorage.getItem('todos')) || [] ,
         status: null,
         error: null,
     },
