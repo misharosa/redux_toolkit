@@ -79,7 +79,7 @@ const todoSlice = createSlice({
     },
     reducers: {
         addTodo (state, action) {
-            state.todos.push(action.payload)
+            state.todos.push({...action.payload, id: new Date().toISOString()})
         },
         removeTodo (state, action) {
             state.todos = state.todos.filter(todo => todo.id !== action.payload.id)
