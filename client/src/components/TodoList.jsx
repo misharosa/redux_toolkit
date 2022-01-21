@@ -3,10 +3,14 @@ import { TodoItem } from "./TodoItem";
 
 export const TodoList = () => {
     const todos = useSelector(state => state.todos.todos)
+
+    localStorage.setItem('todos', JSON.stringify(todos))
+    const localTodos = JSON.parse(localStorage.getItem('todos'))
+
     return (
         <ul>
             {
-                todos.map(todo =>
+                localTodos.map(todo =>
             <TodoItem
                 key={todo.id}
                 {...todo}

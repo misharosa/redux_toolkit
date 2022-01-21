@@ -8,7 +8,7 @@ export const fetchTodos = createAsyncThunk(
     async ( _ , {rejectWithValue}) => {
         try {
         const { data } = await axios(`${URL_API}?_limit=15`)
-
+            localStorage.setItem('todos', JSON.stringify(data))
         return data
         } catch (error) {
            return rejectWithValue(error.message);
@@ -69,7 +69,7 @@ const setError = (state, action) => {
 const todoSlice = createSlice({
     name: "todos",
     initialState: {
-        todos: [],
+        todos: JSON.parse(localStorage.getItem('todos')) ,
         status: null,
         error: null,
     },

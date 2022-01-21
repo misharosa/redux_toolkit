@@ -17,7 +17,10 @@ export const App = () => {
     }
 
     useEffect(() => {
+        console.log('local',!JSON.parse(localStorage.getItem('todos')).length)
+        if (!JSON.parse(localStorage.getItem('todos')).length) {
             dispatch(fetchTodos())
+        }
     }, [dispatch])
 
   return (
